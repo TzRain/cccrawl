@@ -85,8 +85,8 @@ def search_images(
         params = BingImageSearchParams(q=query, count=count, offset=offset)
     
     params.q = query
-    if params.count is None: params.count = count
-    if params.offset is None: params.offset = offset
+    params.count = count
+    params.offset = offset
 
     headers_dict = headers.to_dict
     params_dict = params.to_dict
@@ -108,8 +108,8 @@ def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description="Bing Image Search API")
     parser.add_argument("--count", type=int, help="Number of results to return per query", default=2048)
-    parser.add_argument("--batch", type=int, help="Number of results per batch", default=32)
-    parser.add_argument("--save_dir", type=str, help="Path to save the results", default="webc/urls")
+    parser.add_argument("--batch", type=int, help="Number of results per batch", default=64)
+    parser.add_argument("--save_dir", type=str, help="Path to save the results", default="webc/top50_q5_urls")
     args = parser.parse_args()
     return args
 
@@ -131,6 +131,8 @@ if __name__ == "__main__":
     )
 
     print(f'expect {args.count} results for each query')
+
+    os.makedirs(args.save_dir, exist_ok=True)
     
     for query in exampe_query_list:
         file_name = f'url_{query.index}_{query}.json'
@@ -140,7 +142,6 @@ if __name__ == "__main__":
             result = search_images(query=query.query,count=args.batch,offset=i,headers=header,params=params)
             results.extend(result)
         
-        # Save the results to a file
         with open(os.path.join(args.save_dir, file_name), 'w') as f:
             json.dump(results, f, indent=2)
         

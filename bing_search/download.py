@@ -111,7 +111,7 @@ def download_images(data_dict, save_base_folder, **kwargs):
             skip_beacuse_of_error += 1
         
         if processed_count % 32 == 0:
-            print(f"Processed {processed_count} images, time elapsed: {time.time() - TIME_MARKER} s")
+            print(f"Processed {processed_count}/{len(data_dict)} images, time elapsed: {time.time() - TIME_MARKER} s")
             TIME_MARKER = time.time()
     
     print(f"Downloaded {len(new_data_dict)} images")
@@ -163,8 +163,8 @@ def run_download_images(meta_root, base_save_path, split_idx_list):
 def parser_args():
     import argparse
     parser = argparse.ArgumentParser(description='Download images from Bing search API')
-    parser.add_argument('--meta_root', type=str, default='/mnt/lmm/jialiang/data/webc/top50_q5', help='Root folder of meta data')
-    parser.add_argument('--base_save_path', type=str, default='/mnt/vground/bing_search_data/top50_q5', help='Base folder to save images')
+    parser.add_argument('--meta_root', type=str, default='/mnt/lmm/jialiang/data/webc/top50_q5_urls', help='Root folder of meta data')
+    parser.add_argument('--base_save_path', type=str, default='/mnt/vground/bing_search_data/top50_q5_images', help='Base folder to save images')
     parser.add_argument('--split_idx_list',nargs=2, type=int, default=[0,1], help='List of start and end index of json files to download images')
     args = parser.parse_args()
     print(args)

@@ -1,8 +1,13 @@
 import os
 import torch
 from PIL import Image
-from ultralytics import YOLO
-from OmniParser.utils import get_som_labeled_img, check_ocr_box, get_caption_model_processor, get_yolo_model
+
+try:
+    from ultralytics import YOLO
+    from OmniParser.utils import get_som_labeled_img, check_ocr_box, get_caption_model_processor, get_yolo_model
+except:
+    print('Please install ultralytics and OmniParser')
+
 from transformers import AutoModelForImageClassification, AutoImageProcessor
 
 DEVICE = 'cuda' if torch.cuda.is_available() else 'cpu'
