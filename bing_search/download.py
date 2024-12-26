@@ -65,10 +65,14 @@ def download_images(data_dict, save_base_folder, **kwargs):
 
     TIME_MARKER = time.time()
 
+    skip_beacuse_of_error = 0
+    skip_beacuse_of_duplicate = 0
+
     for item in data_dict:
         content_url = item['contentUrl']
 
         if content_url in processed_url:
+            skip_beacuse_of_duplicate += 1
             continue
 
         processed_url.add(content_url)
@@ -104,12 +108,16 @@ def download_images(data_dict, save_base_folder, **kwargs):
         
         if not flag:
             print(f"Error downloading {content_url}, error list: {error_list}")
+            skip_beacuse_of_error += 1
         
         if processed_count % 32 == 0:
             print(f"Processed {processed_count} images, time elapsed: {time.time() - TIME_MARKER} s")
             TIME_MARKER = time.time()
     
     print(f"Downloaded {len(new_data_dict)} images")
+    print(f"Processed set with {processed_count} images")
+    print(f"Skipped {skip_beacuse_of_error} images because of error")
+    print(f"Skipped {skip_beacuse_of_duplicate} images because of duplicate")
         
     return new_data_dict
 
@@ -118,34 +126,34 @@ def run_download_images(meta_root, base_save_path, split_idx_list):
     results = []
 
     json_files = sorted([os.path.join(meta_root, json_file) for json_file in os.listdir(meta_root) if json_file.endswith('.json')])
+    
+    print (f"Downloading images from {split_idx_list[0]} to {split_idx_list[1]} from total {len(json_files)} files")
 
     json_files = json_files[split_idx_list[0]:split_idx_list[1]]
     
     for json_path in json_files:
         
-        with open(json_path, 'r') as f:
-            data_dict = json.load(f)
+        try:
+            
+            with open(json_path, 'r') as f:
+                data_dict = json.load(f)
 
             json_file = os.path.basename(json_path)
 
             index_str = json_file.split('_')[1:4]
             index_str = '_'.join(index_str)
 
-            print('index_str:', index_str)
-
             cate, app, query = '_'.join(json_file.split('_')[4:]).split('.')[0].split('-')[:3]
 
-            
-            print('cate:', cate)
-            print('app:', app)
-            print('query:', query)
+            print(f'Processing index {index_str}, cate: {cate}, app: {app}, query: {query}')
 
             save_path = os.path.join(base_save_path, "image", f"{index_str}")
             result = download_images(data_dict, save_path, cate=cate, app=app, query=query)
 
             results.append(result)
-        
-        break
+
+        except Exception as e:
+            print(f"Error processing {json_path}: {e}")
     
     # save
     save_path = os.path.join(base_save_path, f"meta_data_{split_idx_list[0]}to{split_idx_list[1]}.csv")
