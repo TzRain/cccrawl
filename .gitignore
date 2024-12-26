@@ -5,3 +5,8 @@ test
 *.json
 process.py
 select.py
+
+webc
+data
+generativedatasets_processed
+OmniParser
