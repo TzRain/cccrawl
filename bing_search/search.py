@@ -117,7 +117,9 @@ if __name__ == "__main__":
     
     args = parse_args()
 
-    exampe_query_list = QUERY_LIST
+    exampe_query_list = QUERY_LIST[-3:]
+
+    print(exampe_query_list)
 
     header = BingImageSearchHeaders(
         Ocp_Apim_Subscription_Key=BING_SEARCH_V7_SUBSCRIPTION_KEY

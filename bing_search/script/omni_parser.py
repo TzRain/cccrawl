@@ -12,14 +12,19 @@ import pandas as pd
 from PIL import Image
 from bing_search.models import OmniParserModel
 import json
-from bing_search.util import generativedatasets_get_dir, generativedatasets_path_to_info
+from bing_search.util import generativedatasets_get_dir, generativedatasets_path_to_info, bing_search_download_get_dir
 
 def parser_args():
     import argparse
     parser = argparse.ArgumentParser(description='OmniParser')
+    #data_root_type:
+    parser.add_argument('--data_root_type', type=str, default='generativedatasets') # 'generativedatasets' or 'bing_search'
     parser.add_argument('--org_data_root', type=str, default='/mnt/vground/generativedatasets/generativedatasets/gold_en/collection=base/data/office/')
     parser.add_argument('--save_data_root', type=str, default='/mnt/vground/generativedatasets/generativedatasets_processed/gold_en/collection=base/data/office/')
     args = parser.parse_args()
+    # script:
+    # python bing_search/script/omni_parser.py --data_root_type bing_search --org_data_root /mnt/vground/bing_search_data/top50_q5_images/image --save_data_root /mnt/vground/bing_search_data/top50_q5_images/image_parsed
+
     return args
 
 if __name__ == "__main__":
@@ -27,7 +32,11 @@ if __name__ == "__main__":
     args = parser_args()
 
     model = OmniParserModel()
-    dirs, meta = generativedatasets_get_dir(args.org_data_root)
+    if args.data_root_type == 'generativedatasets':
+        dirs, meta = generativedatasets_get_dir(args.org_data_root)
+    elif args.data_root_type == 'bing_search':
+        dirs = bing_search_download_get_dir(args.org_data_root)
+    
     print(f'Found {len(dirs)} dirs')
     meta_data = []
     for dir_idx, dir in enumerate(dirs):

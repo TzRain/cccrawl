@@ -363,6 +363,27 @@ total_query = {
             '"PowerToys PowerRename" tool',
             '"PowerToys Color Picker"',
             '"PowerToys Keyboard Manager" settings'
+        ],
+        "remote_desktop": [
+            '"Remote Desktop" connection interface',
+            '"Remote Desktop" settings menu',
+            '"Remote Desktop" file sharing interface',
+            '"Remote Desktop" session toolbar',
+            '"Remote Desktop" login screen'
+        ],
+        "deltaforce": [
+            '"Deltaforce" antivirus dashboard',
+            '"Deltaforce" real-time protection',
+            '"Deltaforce" scan results screen',
+            '"Deltaforce" quarantine view',
+            '"Deltaforce" settings menu'
+        ],
+        "mcafee_ui_container": [
+            '"McAfee" antivirus dashboard',
+            '"McAfee" real-time protection screen',
+            '"McAfee" scan results interface',
+            '"McAfee" quarantine tools',
+            '"McAfee" settings menu'
         ]
     }
 }
@@ -437,3 +458,4 @@ if __name__ ==  '__main__':
     print(f'category list with length: {len(CATE_LIST)}, {str(CATE_LIST[0])}')
     print(f'app list with length: {len(APP_LIST)}, {str(APP_LIST[0])}')
     print(f'query list with length: {len(QUERY_LIST)}, {str(QUERY_LIST[0])}')
+    print(APP_LIST)

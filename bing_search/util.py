@@ -25,6 +25,12 @@ root_path = 'generativedatasets/generativedatasets/gold_en/collection=base/data/
 filename = f'{root_path}/resolution={resolution}/language={language}/theme={theme}/app={app}/'
 
 """
+def bing_search_download_get_dir(root_path,start=0,end=250):
+    all_dirs = os.listdir(root_path)
+    all_dirs = sorted(all_dirs)
+    all_dirs = [os.path.join(root_path, d) for d in all_dirs]
+    dirs = all_dirs[start:end]
+    return dirs
 
 def generativedatasets_path_to_info(path):
     parts = path.split('/')
