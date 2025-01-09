@@ -93,7 +93,7 @@ def download_images(data_dict, save_base_folder, **kwargs):
 
                 post_fix = 1
 
-                while os.exists(save_path):
+                while os.path.exists(save_path):
                     image_name = image_name.split(".")[0] + f"_{post_fix}." + image_name.split(".")[1]
                     save_path = os.path.join(save_base_folder, image_name)
                     post_fix += 1
