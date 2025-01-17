@@ -25,6 +25,8 @@ def parser_args():
     # script:
     # python bing_search/script/omni_parser.py --data_root_type bing_search --org_data_root /mnt/vground/bing_search_data/top50_q5_images/image --save_data_root /mnt/vground/bing_search_data/top50_q5_images/image_parsed
 
+    # python bing_search/script/omni_parser.py --data_root_type bing_search --org_data_root /mnt/vground/bing_search_data/top50_q5_images/image --save_data_root /mnt/vground/bing_search_data/top50_q5_images/image_parsed
+
     return args
 
 if __name__ == "__main__":

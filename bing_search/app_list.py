@@ -294,13 +294,7 @@ total_query = {
         ]
     },
     "security_and_system_tools": {
-        "windows_defender": [
-            '"Windows Defender" dashboard',
-            '"Windows Defender" scan results',
-            '"Windows Defender" real-time protection',
-            '"Windows Defender" quarantine',
-            '"Windows Defender" settings menu'
-        ],
+        
         "ccleaner": [
             '"CCleaner" dashboard interface',
             '"CCleaner" junk file cleaner',
@@ -315,34 +309,7 @@ total_query = {
             '"Malwarebytes" real-time protection',
             '"Malwarebytes" settings menu'
         ],
-        "windows_file_explorer": [
-            '"Windows File Explorer" UI',
-            '"Windows File Explorer" ribbon menu',
-            '"Windows File Explorer" quick access',
-            '"Windows File Explorer" properties window',
-            '"Windows File Explorer" folder settings'
-        ],
-        "windows_control_panel": [
-            '"Windows Control Panel" interface',
-            '"Windows Control Panel" settings menu',
-            '"Windows Control Panel" programs and features',
-            '"Windows Control Panel" network settings',
-            '"Windows Control Panel" user accounts'
-        ],
-        "windows_task_manager": [
-            '"Windows Task Manager" processes tab',
-            '"Windows Task Manager" performance tab',
-            '"Windows Task Manager" startup programs',
-            '"Windows Task Manager" details tab',
-            '"Windows Task Manager" services tab'
-        ],
-        "windows_terminal": [
-            '"Windows Terminal" main interface',
-            '"Windows Terminal" PowerShell',
-            '"Windows Terminal" command prompt',
-            '"Windows Terminal" settings menu',
-            '"Windows Terminal" themes'
-        ],
+        
         "revo_uninstaller": [
             '"Revo Uninstaller" dashboard',
             '"Revo Uninstaller" advanced scan',
@@ -384,7 +351,128 @@ total_query = {
             '"McAfee" scan results interface',
             '"McAfee" quarantine tools',
             '"McAfee" settings menu'
+        ],
+        "kaspersky": [
+            '"Kaspersky" antivirus dashboard',
+            '"Kaspersky" real-time protection interface',
+            '"Kaspersky" virus scan results',
+            '"Kaspersky" quarantine tools',
+            '"Kaspersky" settings menu'
+        ],
+        "bitdefender": [
+            '"Bitdefender" main interface',
+            '"Bitdefender" threat detection dashboard',
+            '"Bitdefender" real-time protection overview',
+            '"Bitdefender" scan results panel',
+            '"Bitdefender" advanced settings menu'
         ]
+    },
+    "windows_ui": {
+        "windows_settings": [
+            '"Windows Settings" main interface',
+            '"Windows Settings" system settings',
+            '"Windows Settings" display settings',
+            '"Windows Settings" personalization options',
+            '"Windows Settings" privacy and security menu'
+        ],
+        "windows_desktop": [
+            '"Windows Desktop" main interface',
+            '"Windows Desktop" right-click context menu',
+            '"Windows Desktop" taskbar settings',
+            '"Windows Desktop" notification area',
+            '"Windows Desktop" desktop icon management'
+        ],
+        "windows_start_menu": [
+            '"Windows Start Menu" interface',
+            '"Windows Start Menu" pinned apps',
+            '"Windows Start Menu" all apps view',
+            '"Windows Start Menu" search bar functionality',
+            '"Windows Start Menu" quick access shortcuts'
+        ],
+        "windows_quick_settings": [
+            '"Windows Quick Settings" main interface',
+            '"Windows Quick Settings" network menu',
+            '"Windows Quick Settings" brightness and volume controls',
+            '"Windows Quick Settings" notifications panel',
+            '"Windows Quick Settings" accessibility options'
+        ],
+        "windows_update": [
+            '"Windows Update" dashboard',
+            '"Windows Update" settings menu',
+            '"Windows Update" update history',
+            '"Windows Update" advanced options',
+            '"Windows Update" troubleshooting interface'
+        ],
+        "windows_file_explorer_extra": [
+            '"Windows File Explorer" search functionality',
+            '"Windows File Explorer" preview pane',
+            '"Windows File Explorer" folder properties',
+            '"Windows File Explorer" dark mode interface',
+            '"Windows File Explorer" file type management'
+        ],
+        "task_view": [
+            '"Windows Task View" interface',
+            '"Windows Task View" virtual desktop management',
+            '"Windows Task View" timeline feature',
+            '"Windows Task View" app switching interface',
+            '"Windows Task View" multitasking settings'
+        ],
+        "windows_diagnostics": [
+            '"Windows Error Reporting" main window',
+            '"Windows Troubleshooter" interface',
+            '"Windows Diagnostics" performance monitor',
+            '"Windows Reliability Monitor" dashboard',
+            '"Windows Event Viewer" logs'
+        ],
+        "windows_power_and_battery": [
+            '"Windows Power Settings" interface',
+            '"Windows Battery Saver" settings',
+            '"Windows Power Plan" options',
+            '"Windows Sleep and Hibernate settings',
+            '"Windows Energy Report" diagnostic interface'
+        ],
+        "windows_accessibility": [
+            '"Windows Magnifier" tool',
+            '"Windows Narrator" settings',
+            '"Windows On-Screen Keyboard" interface',
+            '"Windows High Contrast Mode" settings',
+            '"Windows Accessibility" options menu'
+        ],
+        "windows_file_explorer": [
+            '"Windows File Explorer" UI',
+            '"Windows File Explorer" ribbon menu',
+            '"Windows File Explorer" quick access',
+            '"Windows File Explorer" properties window',
+            '"Windows File Explorer" folder settings'
+        ],
+        "windows_control_panel": [
+            '"Windows Control Panel" interface',
+            '"Windows Control Panel" settings menu',
+            '"Windows Control Panel" programs and features',
+            '"Windows Control Panel" network settings',
+            '"Windows Control Panel" user accounts'
+        ],
+        "windows_task_manager": [
+            '"Windows Task Manager" processes tab',
+            '"Windows Task Manager" performance tab',
+            '"Windows Task Manager" startup programs',
+            '"Windows Task Manager" details tab',
+            '"Windows Task Manager" services tab'
+        ],
+        "windows_terminal": [
+            '"Windows Terminal" main interface',
+            '"Windows Terminal" PowerShell',
+            '"Windows Terminal" command prompt',
+            '"Windows Terminal" settings menu',
+            '"Windows Terminal" themes'
+        ],
+        "windows_defender": [
+            '"Windows Defender" dashboard',
+            '"Windows Defender" scan results',
+            '"Windows Defender" real-time protection',
+            '"Windows Defender" quarantine',
+            '"Windows Defender" settings menu'
+        ],
     }
 }
 
@@ -458,4 +546,3 @@ if __name__ ==  '__main__':
     print(f'category list with length: {len(CATE_LIST)}, {str(CATE_LIST[0])}')
     print(f'app list with length: {len(APP_LIST)}, {str(APP_LIST[0])}')
     print(f'query list with length: {len(QUERY_LIST)}, {str(QUERY_LIST[0])}')
-    print(APP_LIST)

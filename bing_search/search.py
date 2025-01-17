@@ -8,6 +8,8 @@ from config import BING_SEARCH_V7_ENDPOINT, BING_SEARCH_V7_SUBSCRIPTION_KEY, NEE
 
 from app_list import QUERY_LIST
 
+from concurrent.futures import ThreadPoolExecutor
+
 # Define a dataclass to encapsulate the query parameters for Bing Image Search API
 @dataclass
 class BingImageSearchParams:
@@ -106,10 +108,11 @@ def search_images(
 
 def parse_args():
     import argparse
+
     parser = argparse.ArgumentParser(description="Bing Image Search API")
     parser.add_argument("--count", type=int, help="Number of results to return per query", default=2048)
-    parser.add_argument("--batch", type=int, help="Number of results per batch", default=64)
-    parser.add_argument("--save_dir", type=str, help="Path to save the results", default="webc/top50_q5_urls")
+    parser.add_argument("--batch", type=int, help="Number of results per batch", default=128)
+    parser.add_argument("--save_dir", type=str, help="Path to save the results", default="webc/top65_urls")
     args = parser.parse_args()
     return args
 
@@ -117,7 +120,7 @@ if __name__ == "__main__":
     
     args = parse_args()
 
-    exampe_query_list = QUERY_LIST[-3:]
+    exampe_query_list = QUERY_LIST
 
     print(exampe_query_list)
 
@@ -140,12 +143,17 @@ if __name__ == "__main__":
         file_name = f'url_{query.index}_{query}.json'
         
         results = []
-        for i in range(0, args.count, args.batch):
-            result = search_images(query=query.query,count=args.batch,offset=i,headers=header,params=params)
-            results.extend(result)
+
+        def fetch_batch(offset):
+            return search_images(query=query.query, count=args.batch, offset=offset, headers=header, params=params)
+
+        with ThreadPoolExecutor() as executor:
+            futures = [executor.submit(fetch_batch, i) for i in range(0, args.count, args.batch)]
+            for future in futures:
+                results.extend(future.result())
         
         with open(os.path.join(args.save_dir, file_name), 'w') as f:
-            json.dump(results, f, indent=2)
+            json.dump(results, f)
         
         print(f"Saved {len(results)} results to {file_name}")
 

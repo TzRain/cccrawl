@@ -13,6 +13,10 @@ from util import camel_to_snake, snake_to_camel, name_to_path
 
 from bing_search.models import ScreenshotChecker
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+import traceback
+
 screenshot_checker = ScreenshotChecker()
 
 headers_list = [
@@ -68,59 +72,84 @@ def download_images(data_dict, save_base_folder, **kwargs):
     skip_beacuse_of_error = 0
     skip_beacuse_of_duplicate = 0
 
-    for item in data_dict:
+    def save_image(image, save_base_folder, image_name):
+        post_fix = 0
+
+        save_path = os.path.join(save_base_folder, image_name)
+
+        while os.path.exists(save_path) and post_fix < 128:
+            current_image_name = image_name.split(".")[0] + f"_{post_fix}." + image_name.split(".")[1]
+            save_path = os.path.join(save_base_folder, current_image_name)
+            post_fix += 1
+            if post_fix == 32:
+                return None
+        
+        if not os.path.exists(save_path):
+            image.convert("RGB").save(save_path)
+            return save_path
+        else:
+            return None
+        
+
+    # 限时 120s 完成
+    def process_item(item, save_base_folder, headers_list, screenshot_checker, processed_url, **kwargs):
+        
         content_url = item['contentUrl']
 
         if content_url in processed_url:
-            skip_beacuse_of_duplicate += 1
-            continue
+            return None, 'duplicate'
 
         processed_url.add(content_url)
 
-        processed_count += 1
-
-        flag = False
         error_list = []
 
         for headers in headers_list:
             try:
-                response = requests.get(content_url, headers=headers, stream=True)
+                response = requests.get(content_url, headers=headers, stream=True, timeout=5)
                 response.raise_for_status()
                 image = Image.open(BytesIO(response.content))
-                score = screenshot_checker.predict(image) #
-                image_name = content_url.split("/")[-1].split("?")[0] #
-                save_path = os.path.join(save_base_folder, image_name) #
+                score = screenshot_checker.predict(image)
+                image_name = content_url.split("/")[-1].split("?")[0]
 
-                post_fix = 1
+                final_save_path = save_image(image, save_base_folder, image_name)
 
-                while os.path.exists(save_path):
-                    image_name = image_name.split(".")[0] + f"_{post_fix}." + image_name.split(".")[1]
-                    save_path = os.path.join(save_base_folder, image_name)
-                    post_fix += 1
+                if final_save_path is None:
+                    continue
 
-                image.convert("RGB").save(save_path)
-                
                 item.update({
-                    "image_path": save_path,
+                    "image_path": final_save_path,
                     'image_name': image_name,
                     "score": score
                 })
                 item.update(kwargs)
 
-                new_data_dict.append(item)
-                flag = True
-                break
-            
+                return item, None
+
             except Exception as e:
                 error_list.append(e)
-        
-        if not flag:
-            print(f"Error downloading {content_url}, error list: {error_list}")
-            skip_beacuse_of_error += 1
-        
-        if processed_count % 32 == 0:
-            print(f"Processed {processed_count}/{len(data_dict)} images, time elapsed: {time.time() - TIME_MARKER} s")
-            TIME_MARKER = time.time()
+
+        return None, error_list
+
+    with ThreadPoolExecutor() as executor:
+
+        futures = [executor.submit(process_item, item, save_base_folder, headers_list, screenshot_checker, processed_url, **kwargs) for item in data_dict]
+
+        for future in as_completed(futures):
+            result, error = future.result()
+            if result:
+                new_data_dict.append(result)
+            else:
+                print(f"Error processing {error}")
+                if error == 'duplicate':
+                    skip_beacuse_of_duplicate += 1
+                else:
+                    skip_beacuse_of_error += 1
+
+            processed_count += 1
+
+            if processed_count % 32 == 0:
+                print(f"Processed {processed_count}/{len(data_dict)} images, time elapsed: {time.time() - TIME_MARKER} s")
+                TIME_MARKER = time.time()
     
     print(f"Downloaded {len(new_data_dict)} images")
     print(f"Processed set with {processed_count} images")
@@ -138,6 +167,11 @@ def run_download_images(meta_root, base_save_path, split_idx_list):
     print (f"Downloading images from {split_idx_list[0]} to {split_idx_list[1]} from total {len(json_files)} files")
 
     json_files = json_files[split_idx_list[0]:split_idx_list[1]]
+
+    meta_path = os.path.join(base_save_path, "meta")
+
+    if not os.path.exists(meta_path):
+        os.makedirs(meta_path)
     
     for json_path in json_files:
         
@@ -158,18 +192,25 @@ def run_download_images(meta_root, base_save_path, split_idx_list):
             save_path = os.path.join(base_save_path, "image", f"{index_str}")
             result = download_images(data_dict, save_path, cate=cate, app=app, query=query)
 
+            save_result_to_json_path = os.path.join(base_save_path, "meta", f"{json_file}")
+
+            with open(save_result_to_json_path, 'w') as f:
+                json.dump(result, f)
+
             results.append(result)
 
         except Exception as e:
+            traceback.print_exc()
             print(f"Error processing {json_path}: {e}")
     
-    # save
-    save_path = os.path.join(base_save_path, f"meta_data_{split_idx_list[0]}to{split_idx_list[1]}.csv")
-    df = pd.DataFrame(results)
-    df.to_csv(save_path)
+    # save as df
+    # save_path = os.path.join(base_save_path, f"meta_data_{split_idx_list[0]}to{split_idx_list[1]}.csv")
+    # df = pd.DataFrame(results)
+    # df.to_csv(save_path)
 
 def parser_args():
     import argparse
+
     parser = argparse.ArgumentParser(description='Download images from Bing search API')
     parser.add_argument('--meta_root', type=str, default='/mnt/lmm/jialiang/data/webc/top50_q5_urls', help='Root folder of meta data')
     parser.add_argument('--base_save_path', type=str, default='/mnt/vground/bing_search_data/top50_q5_images', help='Base folder to save images')
