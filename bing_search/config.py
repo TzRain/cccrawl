@@ -1,4 +1,5 @@
-BING_SEARCH_V7_SUBSCRIPTION_KEY="b2df87ded3c7412e959be43508e0cd2b"
+BING_SEARCH_V7_SUBSCRIPTION_KEY="fd4b3e9e493b4d9a9c344726b73e006a"
+# fd4b3e9e493b4d9a9c344726b73e006a b2df87ded3c7412e959be43508e0cd2b
 BING_SEARCH_V7_ENDPOINT="https://api.bing.microsoft.com/v7.0/images/search"
 
 # 'name' ='Microsoft 365 Word user interface on Windows 10 and on Mac - Windows 10'

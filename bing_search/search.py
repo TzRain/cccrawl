@@ -1,4 +1,5 @@
 
+from argparse import Namespace
 import requests
 from util import camel_to_snake, snake_to_camel
 from dataclasses import dataclass
@@ -122,7 +123,70 @@ if __name__ == "__main__":
 
     exampe_query_list = QUERY_LIST
 
-    print(exampe_query_list)
+    # custom_query_list = [
+    #     "Windows 11 Connect Bluetooth device",
+    #     "Windows 10 Change desktop wallpaper",
+    #     "Windows 11 Check Windows updates",
+    #     "Windows 11 Adjust display settings",
+    #     "Windows 10 Enable or disable Bluetooth",
+    #     "Windows 11 Switch light or dark mode",
+    #     "Windows 11 Manage OneDrive storage",
+    #     "Windows 10 Add or remove Bluetooth devices",
+    #     "Windows 11 Change sound output",
+    #     "Windows 11 Customize taskbar",
+    #     "Windows 10 Update language or time settings",
+    #     "Windows 11 Personalize system theme",
+    #     "Windows 10 Manage user accounts",
+    #     "Windows 11 Configure privacy settings",
+    #     "Windows 11 Free up storage space",
+    #     "Windows 11 Access Windows help",
+    #     "Windows 10 Enable accessibility tools",
+    #     "Windows 11 Reset system settings",
+    #     "Windows 10 Configure gaming settings",
+    #     "Windows 11 Customize lock screen",
+    #     "Windows 11 Troubleshoot system performance",
+    #     "Windows 10 Add additional Bluetooth devices",
+    #     "Windows 11 Update hardware drivers",
+    #     "Windows 11 Optimize startup programs",
+    #     "macOS Connect Bluetooth device",
+    #     "macOS Change desktop wallpaper",
+    #     "macOS Manage system updates",
+    #     "macOS Adjust display resolution",
+    #     "macOS Enable or disable Bluetooth",
+    #     "macOS Switch light or dark mode",
+    #     "macOS Manage iCloud storage",
+    #     "macOS Change audio output",
+    #     "macOS Customize Dock and menu bar",
+    #     "macOS Update language or time settings",
+    #     "macOS Manage user accounts",
+    #     "macOS Configure privacy settings",
+    #     "macOS Troubleshoot performance issues",
+    #     "macOS Free up storage space",
+    #     "iOS Connect Bluetooth device",
+    #     "iOS Change wallpaper",
+    #     "iOS Check iOS updates",
+    #     "iOS Manage iCloud storage",
+    #     "iOS Enable or disable Bluetooth",
+    #     "iOS Adjust display brightness",
+    #     "iOS Configure privacy settings",
+    #     "iOS Enable accessibility features",
+    #     "iOS Customize home screen",
+    #     "iOS Reset device settings",
+    #     "Android Connect Bluetooth device",
+    #     "Android Change wallpaper",
+    #     "Android Check system updates",
+    #     "Android Enable or disable Bluetooth",
+    #     "Android Adjust display brightness",
+    #     "Android Manage Google Drive storage",
+    #     "Android Configure privacy settings",
+    #     "Android Enable accessibility features",
+    #     "Android Reset device settings",
+    #     "Android Customize home screen",
+    #     "Android Manage app permissions",
+    # ]
+
+    # exampe_query_list = custom_query_list #!DEBUG
+
 
     header = BingImageSearchHeaders(
         Ocp_Apim_Subscription_Key=BING_SEARCH_V7_SUBSCRIPTION_KEY
@@ -139,8 +203,17 @@ if __name__ == "__main__":
 
     os.makedirs(args.save_dir, exist_ok=True)
     
-    for query in exampe_query_list:
-        file_name = f'url_{query.index}_{query}.json'
+    for qid, query in enumerate(exampe_query_list):
+
+        if not 'clipchamp' in query.query:
+            continue
+
+        if isinstance(query, str):
+            query = Namespace(query=query, index=qid)
+            file_name = f"url_00_00_{query.index}_system-app-{query.query}.json"
+
+        else:
+            file_name = f'url_{query.index}_{query}.json'
         
         results = []
 

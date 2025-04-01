@@ -10,3 +10,7 @@ webc
 data
 generativedatasets_processed
 OmniParser
+tmp
+
+OmniParser-v2.0/
+OmniParser3/

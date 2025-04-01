@@ -473,6 +473,15 @@ total_query = {
             '"Windows Defender" quarantine',
             '"Windows Defender" settings menu'
         ],
+    },
+    'others': {
+        "clipchamp":[
+            '"clipchamp" timeline editing',
+            '"clipchamp" workspace',
+            '"clipchamp" color correction',
+            '"clipchamp" settings',
+            '"clipchamp" export save'
+        ],
     }
 }
 
